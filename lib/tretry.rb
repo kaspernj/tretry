@@ -1,8 +1,18 @@
+#A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more.
 class Tretry
+  #Valid keys that can be given as argument for the method 'try'.
   VALID_KEYS = [:tries, :timeout, :wait, :interrupt, :exit, :errors, :return_error]
   
+  #===Runs a block of code a given amount of times until it succeeds.
+  #===Examples
+  #  res = Tretry.try(:tries => 3) do
+  #     #something that often fails
+  #  end
+  #  
+  #  puts "Tries: '#{res[:tries]}'."
+  #  puts "Result: '#{res[:result}'."
   def self.try(args = {}, &block)
-    #Validate given arguments.
+    #Validate given arguments and set various variables.
     raise "No block was given." if !block
     raise "Expected argument to be a hash." if !args.is_a?(Hash)
     
@@ -52,6 +62,8 @@ class Tretry
         end
         
         error = e
+        
+        #Sleep for a given amount of time if the 'wait'-argument is given.
         sleep(args[:wait]) if args[:wait] and !doraise
       end
       
