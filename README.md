@@ -1,6 +1,24 @@
 # tretry
 
-Description goes here.
+## Installation
+
+gem 'tretry'
+
+## Usage
+
+### Simple retry three times (which is the default)
+```ruby
+Tretry.retry do
+  # do something that might randomly fail.
+end
+```
+
+### Retry with options
+```ruby
+Tretry.retry(tries: 3, timeout: 1.5, errors: [SomeCustomError], wait: 1) do
+  # do something.
+end
+```
 
 ## Contributing to tretry
  
