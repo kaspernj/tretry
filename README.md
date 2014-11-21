@@ -6,7 +6,9 @@
 
 ## Installation
 
+```ruby
 gem 'tretry'
+```
 
 ## Usage
 
