@@ -14,14 +14,14 @@ gem 'tretry'
 
 ### Simple retry three times (which is the default)
 ```ruby
-Tretry.retry do
+Tretry.try do
   # do something that might randomly fail.
 end
 ```
 
 ### Retry with options
 ```ruby
-Tretry.retry(tries: 3, timeout: 1.5, errors: [SomeCustomError], wait: 1) do
+Tretry.try(tries: 3, timeout: 1.5, errors: [SomeCustomError], wait: 1) do
   # do something.
 end
 ```
