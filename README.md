@@ -1,3 +1,7 @@
+[![Build Status](https://api.shippable.com/projects/540e7b9e3479c5ea8f9ec25b/badge?branchName=master)](https://app.shippable.com/projects/540e7b9e3479c5ea8f9ec25b/builds/latest)
+[![Code Climate](https://codeclimate.com/github/kaspernj/tretry/badges/gpa.svg)](https://codeclimate.com/github/kaspernj/tretry)
+[![Test Coverage](https://codeclimate.com/github/kaspernj/tretry/badges/coverage.svg)](https://codeclimate.com/github/kaspernj/tretry)
+
 # tretry
 
 ## Installation
