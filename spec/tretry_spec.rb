@@ -38,11 +38,41 @@ describe "Tretry" do
 
       res[:error].should eq false
       res[:result].should eq "kasper"
-      res[:tries].length.should eq 4
+      res[:fails].length.should eq 4
 
-      res[:tries].each do |err|
+      res[:fails].each do |err|
         err[:error].is_a?(Timeout::Error).should eq true
       end
     end
+  end
+
+  it "#before_retry" do
+    before_retry_count = 0
+    try_count = 0
+
+    try = Tretry.new
+
+    try.before_retry do
+      before_retry_count += 1
+    end
+
+    try.try do
+      try_count += 1
+      raise "test" if try_count < 3
+    end
+
+    before_retry_count.should eq 2
+
+    try.fails.each do |try_i|
+      try_i[:error].is_a?(RuntimeError).should eq true
+    end
+  end
+
+  it "should raise an error if fails" do
+    expect {
+      Tretry.try do
+        raise "fail"
+      end
+    }.to raise_error(RuntimeError)
   end
 end
