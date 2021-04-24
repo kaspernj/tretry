@@ -10,8 +10,8 @@ describe "Tretry" do
         "kasper"
       end
 
-      res[:error].should eq false
-      res[:result].should eq "kasper"
+      expect(res[:error]).to eq false
+      expect(res[:result]).to eq "kasper"
     end
 
     it "should be able to do waits between tries" do
@@ -25,7 +25,8 @@ describe "Tretry" do
 
       time_end = Time.now.to_f
       time_elap = time_end - time_start
-      time_elap.should > 0.4
+
+      expect(time_elap).to be > 0.4
     end
 
     it "should be able to do timeouts with tries" do
@@ -36,12 +37,12 @@ describe "Tretry" do
         "kasper"
       end
 
-      res[:error].should eq false
-      res[:result].should eq "kasper"
-      res[:fails].length.should eq 4
+      expect(res[:error]).to eq false
+      expect(res[:result]).to eq "kasper"
+      expect(res[:fails].length).to eq 4
 
       res[:fails].each do |err|
-        err[:error].is_a?(Timeout::Error).should eq true
+        expect(err[:error]).to be_a Timeout::Error
       end
     end
   end
@@ -61,10 +62,10 @@ describe "Tretry" do
       raise "test" if try_count < 3
     end
 
-    before_retry_count.should eq 2
+    expect(before_retry_count).to eq 2
 
     try.fails.each do |try_i|
-      try_i[:error].is_a?(RuntimeError).should eq true
+      expect(try_i[:error]).to be_a RuntimeError
     end
   end
 
