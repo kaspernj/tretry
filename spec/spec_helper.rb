@@ -1,12 +1,11 @@
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'rspec'
-require 'tretry'
+$LOAD_PATH.unshift(File.join(__dir__, "..", "lib"))
+$LOAD_PATH.unshift(__dir__)
+require "rspec"
+require "tretry"
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
 
-RSpec.configure do |config|
-
+RSpec.configure do |config| # rubocop:disable Lint/EmptyBlock
 end
