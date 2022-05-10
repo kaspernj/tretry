@@ -1,7 +1,5 @@
-# encoding: utf-8
-
-require 'rubygems'
-require 'bundler'
+require "rubygems"
+require "bundler"
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
@@ -9,30 +7,16 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'rake'
+require "rake"
 
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "tretry"
-  gem.homepage = "http://github.com/kaspernj/tretry"
-  gem.license = "MIT"
-  gem.summary = %Q{A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more.}
-  gem.description = %Q{A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more.}
-  gem.email = "k@spernj.org"
-  gem.authors = ["Kasper Johansen"]
-  # dependencies defined in Gemfile
-end
-Jeweler::RubygemsDotOrgTasks.new
-
-require 'rspec/core'
-require 'rspec/core/rake_task'
+require "rspec/core"
+require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec) do |spec|
-  spec.pattern = FileList['spec/**/*_spec.rb']
+  spec.pattern = FileList["spec/**/*_spec.rb"]
 end
 
 RSpec::Core::RakeTask.new(:rcov) do |spec|
-  spec.pattern = 'spec/**/*_spec.rb'
+  spec.pattern = "spec/**/*_spec.rb"
   spec.rcov = true
 end
 
