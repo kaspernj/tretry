@@ -1,5 +1,7 @@
 #A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more.
 class Tretry
+  autoload :Result, "#{__dir__}/tretry/result"
+
   attr_reader :fails
   attr_accessor :timeout, :tries, :wait
 
@@ -62,10 +64,10 @@ class Tretry
       if @doraise
         if @return_error
           @fails << {error: @error}
-          return {
+          return Tretry::Result.new(
             fails: @fails,
             error: true
-          }
+          )
         else
           raise @error
         end
@@ -76,11 +78,11 @@ class Tretry
       break if @dobreak
     end
 
-    return {
+    Tretry::Result.new(
       fails: @fails,
       result: @res,
       error: false
-    }
+    )
   end
 
 private
