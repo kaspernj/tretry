@@ -1,8 +1,8 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require "spec_helper"
 
-describe "Tretry" do
+describe Tretry do
   context "#try" do
-    it "should be able to run blocks" do
+    it "runs blocks" do
       try = 0
       res = Tretry.try(tries: 5) do
         try += 1
@@ -14,7 +14,7 @@ describe "Tretry" do
       expect(res[:result]).to eq "kasper"
     end
 
-    it "should be able to do waits between tries" do
+    it "waits between tries" do
       try = 0
       time_start = Time.now.to_f
       res = Tretry.try(tries: 5, wait: 0.1) do
@@ -29,7 +29,7 @@ describe "Tretry" do
       expect(time_elap).to be > 0.4
     end
 
-    it "should be able to do timeouts with tries" do
+    it "does timeouts with tries" do
       try = 0
       res = Tretry.try(tries: 5, timeout: 0.1) do
         try += 1
@@ -69,7 +69,7 @@ describe "Tretry" do
     end
   end
 
-  it "should raise an error if fails" do
+  it "raises an error if fails" do
     expect {
       Tretry.try do
         raise "fail"

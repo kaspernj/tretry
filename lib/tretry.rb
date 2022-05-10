@@ -1,10 +1,9 @@
 #A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more.
 class Tretry
+  autoload :Result, "#{__dir__}/tretry/result"
+
   attr_reader :fails
   attr_accessor :timeout, :tries, :wait
-
-  #Valid keys that can be given as argument for the method 'try'.
-  VALID_KEYS = [:tries, :timeout, :wait, :interrupt, :exit, :errors, :return_error]
 
   #===Runs a block of code a given amount of times until it succeeds.
   #===Examples
@@ -14,16 +13,20 @@ class Tretry
   #
   #  puts "Tries: '#{res[:tries]}'."
   #  puts "Result: '#{res[:result}'."
-  def self.try(args = {}, &block)
-    Tretry.new(args).try(&block)
+  def self.try(**args, &block)
+    Tretry.new(**args).try(&block)
   end
 
-  def initialize(args = {})
-    @args = args
+  def initialize(errors: nil, exit: true, interrupt: true, return_error: nil, timeout: nil, tries: 3, wait: nil)
+    @errors = errors
+    @exit = exit
     @fails = []
+    @interrupt = interrupt
     @before_retry = []
-
-    parse_arguments
+    @return_error = return_error
+    @timeout = timeout
+    @tries = tries
+    @wait = wait
   end
 
   def before_retry(&block)
@@ -59,12 +62,12 @@ class Tretry
       end
 
       if @doraise
-        if @args[:return_error]
+        if @return_error
           @fails << {error: @error}
-          return {
+          return Tretry::Result.new(
             fails: @fails,
             error: true
-          }
+          )
         else
           raise @error
         end
@@ -75,28 +78,14 @@ class Tretry
       break if @dobreak
     end
 
-    return {
+    Tretry::Result.new(
       fails: @fails,
       result: @res,
       error: false
-    }
+    )
   end
 
 private
-
-  def parse_arguments
-    #Validate given arguments and set various variables.
-    raise "Expected argument to be a hash." unless @args.is_a?(Hash)
-
-    @args.each do |key, val|
-      raise "Invalid key: '#{key}'." unless VALID_KEYS.include?(key)
-    end
-
-    @args[:tries] ||= 3
-    @tries = @args[:tries].to_i
-    @wait = @args[:wait] ? @args[:wait] : nil
-    @timeout = @args[:timeout] ? @args[:timeout].to_f : nil
-  end
 
   def try_with_timeout
     begin
@@ -112,13 +101,13 @@ private
 
   def handle_error(e)
     if e.class == Interrupt
-      raise e if !@args.key?(:interrupt) || @args[:interrupt]
+      raise e if @interrupt
     elsif e.class == SystemExit
-      raise e if !@args.key?(:exit) || @args[:exit]
-    elsif last_try? || (@args.key?(:errors) && !@args[:errors].include?(e.class))
+      raise e if @exit
+    elsif last_try? || @errors&.include?(e.class)
       @doraise = e
-    elsif @args.key?(:errors) && @args[:errors].index(e.class) != nil
-      #given error was in the :errors-array - do nothing. Maybe later it should be logged and returned in a stats-hash or something? - knj
+    elsif @errors&.include?(e.class)
+      # Given error was in the :errors-array - do nothing. Maybe later it should be logged and returned in a stats-hash or something? - knj
     end
 
     @error = e
