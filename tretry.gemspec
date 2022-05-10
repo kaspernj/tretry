@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.metadata["rubygems_mfa_required"] = "true"
   s.required_ruby_version = ">= 2.6"
-  s.rubygems_version = "2.4.0"
   s.summary = "A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more."
 
   s.add_development_dependency "bundler", "2.3.13"
