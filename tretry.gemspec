@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = "2.4.0"
   s.summary = "A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more."
 
-  s.add_development_dependency "rspec", "2.8.0"
-  s.add_development_dependency "rdoc", "3.12"
-  s.add_development_dependency "bundler", "1.0.0"
+  s.add_development_dependency "rspec", "3.11.0"
+  s.add_development_dependency "rdoc", "6.4.0"
+  s.add_development_dependency "bundler", "2.3.13"
 end
