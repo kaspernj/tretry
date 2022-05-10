@@ -2,7 +2,6 @@
 class Tretry
   autoload :Result, "#{__dir__}/tretry/result"
 
-  attr_reader :fails
   attr_accessor :error, :errors, :exit, :fails, :interrupt, :return_error, :timeout, :tries, :wait
 
   #===Runs a block of code a given amount of times until it succeeds.
@@ -27,16 +26,15 @@ class Tretry
     self.timeout = timeout
     self.tries = tries
     self.wait = wait
-
-    puts "TRIES: #{tries}"
   end
 
   def before_retry(&block)
     @before_retry << block
   end
 
-  def try(&block)
+  def try(&block) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     raise "No block given." unless block
+
     @block = block
 
     tries.times do |count|
@@ -59,8 +57,7 @@ class Tretry
           @res = @block.call
           @dobreak = true
         end
-      rescue Exception => e
-        puts "ERROR: #{e.message}"
+      rescue Exception => e # rubocop:disable Lint/RescueException
         handle_error(e)
       end
 
@@ -72,9 +69,9 @@ class Tretry
             fails: fails,
             error: true
           )
-        else
-          raise error
         end
+
+        raise error
       elsif error
         fails << {error: error}
       end
@@ -101,18 +98,18 @@ private
     handle_error(e)
   end
 
-  def handle_error(e)
-    if e.class == Interrupt
-      raise e if interrupt
-    elsif e.class == SystemExit
-      raise e if self.exit
-    elsif last_try? || errors && !errors.include?(e.class)
-      @doraise = e
-    elsif errors&.include?(e.class)
+  def handle_error(error) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    if error.instance_of?(Interrupt)
+      raise error if interrupt
+    elsif error.instance_of?(SystemExit)
+      raise error if self.exit
+    elsif last_try? || (errors && !errors.include?(error.class))
+      @doraise = error
+    elsif errors&.include?(error.class) # rubocop:disable Lint/EmptyConditionalBody
       # Given error was in the :errors-array - do nothing. Maybe later it should be logged and returned in a stats-hash or something? - knj
     end
 
-    self.error = e
+    self.error = error
   end
 
   def call_before_retry(args)
@@ -126,6 +123,6 @@ private
   end
 
   def first_try?
-    @count == 0
+    @count.zero?
   end
 end

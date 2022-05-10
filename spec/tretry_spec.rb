@@ -4,16 +4,17 @@ class TestError < RuntimeError; end
 class AnotherTestError < RuntimeError; end
 
 describe Tretry do
-  context "#try" do
+  describe "#try" do
     it "runs blocks" do
       try = 0
       res = Tretry.try(tries: 5) do
         try += 1
         raise "Test #{try}" if try < 5
+
         "kasper"
       end
 
-      expect(res[:error]).to eq false
+      expect(res[:error]).to be false
       expect(res[:result]).to eq "kasper"
       expect(try).to eq 5
     end
@@ -21,9 +22,10 @@ describe Tretry do
     it "waits between tries" do
       try = 0
       time_start = Time.now.to_f
-      res = Tretry.try(tries: 5, wait: 0.1) do
+      Tretry.try(tries: 5, wait: 0.1) do
         try += 1
         raise "Test #{try}" if try < 5
+
         "kasper"
       end
 
@@ -41,7 +43,7 @@ describe Tretry do
         "kasper"
       end
 
-      expect(res[:error]).to eq false
+      expect(res[:error]).to be false
       expect(res[:result]).to eq "kasper"
       expect(res[:fails].length).to eq 4
 
@@ -103,10 +105,10 @@ describe Tretry do
   end
 
   it "raises an error if fails" do
-    expect {
+    expect do
       Tretry.try do
         raise "fail"
       end
-    }.to raise_error(RuntimeError)
+    end.to raise_error(RuntimeError)
   end
 end
