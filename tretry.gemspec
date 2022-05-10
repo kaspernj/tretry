@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
-  s.authors = ["Kasper Johansen"]
+  s.authors = ["Kasper Stöckel"]
   s.date = "2014-11-21"
   s.description = "A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more."
   s.email = "k@spernj.org"
@@ -18,45 +18,13 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.md"
   ]
-  s.files = [
-    ".document",
-    ".rspec",
-    "Gemfile",
-    "Gemfile.lock",
-    "LICENSE.txt",
-    "README.md",
-    "Rakefile",
-    "VERSION",
-    "lib/tretry.rb",
-    "shippable.yml",
-    "spec/spec_helper.rb",
-    "spec/tretry_spec.rb",
-    "tretry.gemspec"
-  ]
+  s.files = Dir["{lib}/**/*"] + ["Rakefile"]
   s.homepage = "http://github.com/kaspernj/tretry"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.0"
   s.summary = "A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more."
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 4
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, ["~> 2.8.0"])
-      s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_development_dependency(%q<bundler>, [">= 1.0.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.8.4"])
-    else
-      s.add_dependency(%q<rspec>, ["~> 2.8.0"])
-      s.add_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_dependency(%q<bundler>, [">= 1.0.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.8.4"])
-    end
-  else
-    s.add_dependency(%q<rspec>, ["~> 2.8.0"])
-    s.add_dependency(%q<rdoc>, ["~> 3.12"])
-    s.add_dependency(%q<bundler>, [">= 1.0.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.8.4"])
-  end
+  s.add_development_dependency "rspec", "2.8.0"
+  s.add_development_dependency "rdoc", "3.12"
+  s.add_development_dependency "bundler", "1.0.0"
 end
-

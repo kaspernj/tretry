@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require "spec_helper"
 
-describe "Tretry" do
+describe Tretry do
   context "#try" do
     it "runs blocks" do
       try = 0
