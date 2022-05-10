@@ -1,9 +1,9 @@
-#A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more.
+# A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more.
 class Tretry
   autoload :Result, "#{__dir__}/tretry/result"
 
   attr_reader :fails
-  attr_accessor :timeout, :tries, :wait
+  attr_accessor :error, :errors, :exit, :fails, :interrupt, :return_error, :timeout, :tries, :wait
 
   #===Runs a block of code a given amount of times until it succeeds.
   #===Examples
@@ -18,15 +18,17 @@ class Tretry
   end
 
   def initialize(errors: nil, exit: true, interrupt: true, return_error: nil, timeout: nil, tries: 3, wait: nil)
-    @errors = errors
-    @exit = exit
-    @fails = []
-    @interrupt = interrupt
+    self.errors = errors
+    self.exit = exit
+    self.fails = []
+    self.interrupt = interrupt
     @before_retry = []
-    @return_error = return_error
-    @timeout = timeout
-    @tries = tries
-    @wait = wait
+    self.return_error = return_error
+    self.timeout = timeout
+    self.tries = tries
+    self.wait = wait
+
+    puts "TRIES: #{tries}"
   end
 
   def before_retry(&block)
@@ -37,20 +39,20 @@ class Tretry
     raise "No block given." unless block
     @block = block
 
-    @tries.times do |count|
+    tries.times do |count|
       @count = count
 
       unless first_try?
         # Sleep for a given amount of time if the 'wait'-argument is given.
-        sleep(@wait) if @wait
+        sleep(wait) if wait
 
-        call_before_retry(error: @error)
-        @error = nil
+        call_before_retry(error: error)
+        self.error = nil
       end
 
       begin
         # If a timeout-argument has been given, then run the code through the timeout.
-        if @timeout
+        if timeout
           try_with_timeout
         else
           # Else call block normally.
@@ -58,28 +60,30 @@ class Tretry
           @dobreak = true
         end
       rescue Exception => e
+        puts "ERROR: #{e.message}"
         handle_error(e)
       end
 
       if @doraise
-        if @return_error
-          @fails << {error: @error}
+        if return_error
+          fails << {error: error}
+
           return Tretry::Result.new(
-            fails: @fails,
+            fails: fails,
             error: true
           )
         else
-          raise @error
+          raise error
         end
-      elsif @error
-        @fails << {error: @error}
+      elsif error
+        fails << {error: error}
       end
 
       break if @dobreak
     end
 
     Tretry::Result.new(
-      fails: @fails,
+      fails: fails,
       result: @res,
       error: false
     )
@@ -88,29 +92,27 @@ class Tretry
 private
 
   def try_with_timeout
-    begin
-      require "timeout"
-      Timeout.timeout(@timeout) do
-        @res = @block.call
-        @dobreak = true
-      end
-    rescue Timeout::Error => e
-      handle_error(e)
+    require "timeout"
+    Timeout.timeout(timeout) do
+      @res = @block.call
+      @dobreak = true
     end
+  rescue Timeout::Error => e
+    handle_error(e)
   end
 
   def handle_error(e)
     if e.class == Interrupt
-      raise e if @interrupt
+      raise e if interrupt
     elsif e.class == SystemExit
-      raise e if @exit
-    elsif last_try? || @errors&.include?(e.class)
+      raise e if self.exit
+    elsif last_try? || errors && !errors.include?(e.class)
       @doraise = e
-    elsif @errors&.include?(e.class)
+    elsif errors&.include?(e.class)
       # Given error was in the :errors-array - do nothing. Maybe later it should be logged and returned in a stats-hash or something? - knj
     end
 
-    @error = e
+    self.error = e
   end
 
   def call_before_retry(args)
@@ -120,7 +122,7 @@ private
   end
 
   def last_try?
-    (@count + 1) >= @tries
+    (@count + 1) >= tries
   end
 
   def first_try?

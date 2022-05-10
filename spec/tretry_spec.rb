@@ -1,5 +1,8 @@
 require "spec_helper"
 
+class TestError < RuntimeError; end
+class AnotherTestError < RuntimeError; end
+
 describe Tretry do
   context "#try" do
     it "runs blocks" do
@@ -12,6 +15,7 @@ describe Tretry do
 
       expect(res[:error]).to eq false
       expect(res[:result]).to eq "kasper"
+      expect(try).to eq 5
     end
 
     it "waits between tries" do
@@ -44,6 +48,35 @@ describe Tretry do
       res[:fails].each do |err|
         expect(err[:error]).to be_a Timeout::Error
       end
+    end
+
+    it "catches given errors" do
+      try_count = 0
+
+      response = Tretry.try(errors: [TestError]) do
+        try_count += 1
+
+        raise TestError, "Test" if try_count <= 2
+
+        54
+      end
+
+      expect(try_count).to eq 3
+      expect(response.result).to eq 54
+    end
+
+    it "only catches given errors" do
+      try_count = 0
+
+      expect do
+        Tretry.try(errors: [TestError]) do
+          try_count += 1
+
+          raise AnotherTestError, "Test"
+        end
+      end.to raise_error(AnotherTestError, "Test")
+
+      expect(try_count).to eq 1
     end
   end
 
