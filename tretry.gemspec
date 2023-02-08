@@ -13,10 +13,4 @@ Gem::Specification.new do |s|
   s.metadata["rubygems_mfa_required"] = "true"
   s.required_ruby_version = ">= 2.6"
   s.summary = "A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more."
-
-  s.add_development_dependency "bundler", "2.3.13"
-  s.add_development_dependency "rspec", "3.12.0"
-  s.add_development_dependency "rubocop"
-  s.add_development_dependency "rubocop-performance"
-  s.add_development_dependency "rubocop-rspec"
 end
