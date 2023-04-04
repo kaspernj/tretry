@@ -11,6 +11,6 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/kaspernj/tretry"
   s.licenses = ["MIT"]
   s.metadata["rubygems_mfa_required"] = "true"
-  s.required_ruby_version = ">= 2.6"
+  s.required_ruby_version = ">= 2.7"
   s.summary = "A library for doing retries in Ruby with timeouts, analysis of errors, waits between tries and more."
 end
