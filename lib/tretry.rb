@@ -105,7 +105,7 @@ private
       raise error if self.exit
     elsif last_try? || (errors && !errors.include?(error.class))
       @doraise = error
-    elsif errors&.include?(error.class) # rubocop:disable Lint/EmptyConditionalBody
+    elsif errors&.include?(error.class)
       # Given error was in the :errors-array - do nothing. Maybe later it should be logged and returned in a stats-hash or something? - knj
     end
 
