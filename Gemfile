@@ -3,7 +3,7 @@ gemspec
 
 group :development do
   gem "bundler", "2.3.13"
-  gem "rspec", "3.13.1"
+  gem "rspec", "3.13.2"
   gem "rubocop"
   gem "rubocop-performance"
   gem "rubocop-rspec"
