@@ -4,27 +4,52 @@ builds:
     environment:
       RUBY_VERSION: 2.7.8
     name: Ruby 2.7.8
+    paths:
+      - "**/*"
+      - "!README.md"
+      - "!LICENSE.txt"
+      - "!docs/**"
     script:
       - bundle exec rspec
   build_2:
     environment:
       RUBY_VERSION: 3.0.5
     name: Ruby 3.0.5
+    paths:
+      - "**/*"
+      - "!README.md"
+      - "!LICENSE.txt"
+      - "!docs/**"
     script:
       - bundle exec rspec
   build_3:
     environment:
       RUBY_VERSION: 3.1.4
     name: Ruby 3.1.4
+    paths:
+      - "**/*"
+      - "!README.md"
+      - "!LICENSE.txt"
+      - "!docs/**"
     script:
       - bundle exec rspec
   build_4:
     environment:
       RUBY_VERSION: 3.2.2
     name: Ruby 3.2.2
+    paths:
+      - "**/*"
+      - "!README.md"
+      - "!LICENSE.txt"
+      - "!docs/**"
     script:
       - bundle exec rspec
   build_5:
     name: Rubocop
+    paths:
+      - "**/*"
+      - "!README.md"
+      - "!LICENSE.txt"
+      - "!docs/**"
     script:
       - bundle exec rubocop
